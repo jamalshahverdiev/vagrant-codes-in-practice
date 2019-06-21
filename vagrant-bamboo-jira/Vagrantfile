@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+sshportPoint = "200"
+bambooPass='Bamboo123'
+jiraDbPass='Jira123'
+current_dir = File.dirname(File.expand_path(__FILE__))
+Vagrant.configure("2") do |vmconf|
+  vmconf.vm.box = "centos/7"
+  vmconf.vm.define "cicd" do |cicd|
+    cicd.vm.network :private_network, ip: "10.1.42.120"
+    cicd.vm.hostname = "cicd"
+    cicd.ssh.forward_agent = true
+    cicd.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}21", id: "ssh"
+    cicd.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 1024]
+      v1.customize ["modifyvm", :id, "--name", "cicd"]  
+    end
+    cicd.vm.provision "shell", path: "scripts/install.sh"
+    cicd.vm.provision :reload
+    cicd.vm.provision "shell", path: "scripts/cicdinstall.sh", args: "bamboo #{bambooPass}"
+  end
+  vmconf.vm.define "jira" do |jira|
+    jira.vm.network :private_network, ip: "10.1.42.212"
+    jira.vm.hostname = "jira"
+    jira.ssh.forward_agent = true
+    jira.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}22", id: "ssh"
+    jira.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 3072]
+      v1.customize ["modifyvm", :id, "--name", "jira"]
+    end
+    jira.vm.provision "shell", path: "scripts/install.sh"
+    jira.vm.provision :reload 
+    jira.vm.provision "shell", path: "scripts/jirainstall.sh", args: "jira #{jiraDbPass}"
+  end
+end

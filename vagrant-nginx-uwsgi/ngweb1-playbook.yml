@@ -1,0 +1,56 @@
+---
+- hosts: all
+  become: true
+  vars:
+    uwsgi_user: vagrant
+    app_path: /home/{{ uwsgi_user }}/myapp
+    ngtemp_path: roles/webserver/templates
+    logname: datanyze
+    appname: myapp
+    webIP: 192.168.120.11
+  pre_tasks:
+    - name: Add nginx repository
+      apt_repository: repo='ppa:nginx/stable'
+
+    - name: update apt cache
+      apt: update_cache=yes
+
+    - name: Install list of packages
+      apt: name={{item}} state=installed
+      with_items:
+           - build-essential
+           - python-dev
+           - libpcre3
+           - libpcre3-dev
+           - python-pip
+           - nginx
+
+    - name: Install pip packages
+      pip: requirements=/home/vagrant/temps/requirements.txt
+
+    - name: Create app folder
+      file: path={{ app_path }} state=directory owner={{ uwsgi_user }} group={{ uwsgi_user }} mode=0755
+
+    - name: Create virtualenv for our app
+      command: virtualenv {{ app_path }}/myappenv
+
+    - name: Change owner of file
+      file: path={{ app_path }} owner=vagrant group=vagrant mode=0755 recurse=yes
+
+    - name: Create web log folder 
+      file: path=/var/log/datanyze-logs state=directory
+     
+    - name: Create error log file
+      file: path=/var/log/datanyze-logs/datanyze-error.log state=touch
+      
+    - name: Create access log file
+      file: path=/var/log/datanyze-logs/datanyze-access.log state=touch
+
+    - name: Enable security update
+      command: echo "unattended-upgrades  unattended-upgrades/enable_auto_updates boolean true" | sudo debconf-set-selections
+      
+    - name: Activate security update
+      command: dpkg-reconfigure --priority=low -f noninteractive unattended-upgrades
+
+  roles:
+    - webserver

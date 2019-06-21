@@ -1,0 +1,17 @@
+---
+- name: Backup original haproxy.cf file
+  command: mv /etc/haproxy/haproxy.cfg  /etc/haproxy/orig-haproxy.cfg
+
+- name: Copy new Haproxy file 
+  template:
+    src=haproxy.cfg.j2
+    dest=/etc/haproxy/haproxy.cfg 
+
+- name: Enable Haproxy on StartUP
+  lineinfile: dest=/etc/default/haproxy
+              regexp='^ENABLED'
+              insertbefore='^#ENABLED'
+              line='ENABLED=1'
+  
+- name: restart haproxy
+  service: name=haproxy state=restarted

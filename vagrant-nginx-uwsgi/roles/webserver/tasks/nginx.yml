@@ -1,0 +1,20 @@
+---
+- name: Copy new virtual host
+  template:
+    src=myapp.j2
+    dest=/etc/nginx/sites-available/myapp
+  notify:
+    - reload nginx
+
+- name: Remove default virtual host
+  file:
+    path=/etc/nginx/sites-enabled/default
+    state=absent
+  notify:
+    - reload nginx
+
+- name: Enable new python virtual host
+  file: src=/etc/nginx/sites-available/myapp dest=/etc/nginx/sites-enabled/myapp state=link
+  notify:
+    - reload nginx
+

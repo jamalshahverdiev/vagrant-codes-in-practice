@@ -1,0 +1,39 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+dockerSubnet = "10.30.10." 
+current_dir = File.dirname(File.expand_path(__FILE__))
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.define "dockermaster" do |subconfig|
+    subconfig.vm.hostname = "dockermaster"
+    subconfig.ssh.forward_agent = true
+    subconfig.vm.network "private_network", ip: "#{dockerSubnet}100"
+    subconfig.vm.network "forwarded_port", guest: 80, host: 8090
+    subconfig.vm.network "forwarded_port", guest: 5000, host: 5000
+    subconfig.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 2048]
+      v1.customize ["modifyvm", :id, "--name", "dockermaster"]  
+    end
+    subconfig.vm.provision "shell", path: "scripts/docker-install.sh"
+    subconfig.vm.provision "shell", path: "scripts/docker-swarm-manager.sh"
+
+  end
+  (1..4).each do |i|
+     config.vm.define "dockernode#{i}" do |nodeconfig|
+       nodeconfig.vm.hostname = "dockernode#{i}"
+       nodeconfig.ssh.forward_agent = true
+       #nodeconfig.vm.synced_folder "#{current_dir}/temps", "/home/vagrant/temps", owner: "vagrant", group: "vagrant"
+       nodeconfig.vm.network "private_network", ip: "#{dockerSubnet}2#{i}"
+       nodeconfig.vm.network "forwarded_port", guest: 80, host: "809#{i}"
+       nodeconfig.vm.network "forwarded_port", guest: 5000, host: "500#{i}"
+       nodeconfig.vm.network :forwarded_port, guest: 22, host: "1002#{i}", id: "ssh"
+       nodeconfig.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 2048]
+         v1.customize ["modifyvm", :id, "--name", "dockernode#{i}"]  
+       end
+       nodeconfig.vm.provision "shell", path: "scripts/docker-install.sh"     
+       nodeconfig.vm.provision "shell", path: "scripts/define-docker-swarm-node-state.sh"     
+     end
+  end
+end

@@ -1,0 +1,22 @@
+---
+- name: Copy logrotate file to the server
+  template:
+    src=datanyze-logrotate.j2
+    dest=/etc/logrotate.d/datanyze-logrotate
+  notify:
+    - reload nginx
+
+- name: Copy UpStart file to the server
+  template:
+    src=myapp.conf.j2
+    dest=/etc/init/myapp.conf
+
+- name: Copy INI file to the server
+  copy: src={{ playbook_dir }}/{{ ngtemp_path }}/myapp.ini.j2 dest={{ app_path }}/myapp.ini owner={{ uwsgi_user }} group={{ uwsgi_user }}
+
+- name: Copy app to the server
+  copy: src={{ playbook_dir }}/{{ ngtemp_path }}/app.py dest={{ app_path }}/app.py owner={{ uwsgi_user }} group={{ uwsgi_user }}
+
+- name: Start new created APP
+  shell: "stop {{ appname }}; start {{ appname }}"
+  become: true

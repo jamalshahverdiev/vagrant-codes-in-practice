@@ -1,0 +1,11 @@
+[uwsgi]
+module = app:application
+
+master = true
+processes = 5
+
+socket = myapp.sock
+chmod-socket = 664
+vacuum = true
+
+die-on-term = true

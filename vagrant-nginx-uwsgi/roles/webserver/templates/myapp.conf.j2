@@ -1,0 +1,13 @@
+description "uWSGI instance to serve myapp"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setuid {{ uwsgi_user }}
+setgid www-data
+
+script
+    cd /home/{{ uwsgi_user }}/myapp
+    . myappenv/bin/activate
+    uwsgi --ini myapp.ini
+end script

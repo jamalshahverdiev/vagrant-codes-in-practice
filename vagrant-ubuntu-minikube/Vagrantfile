@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+sshportPoint = "210"
+current_dir = File.dirname(File.expand_path(__FILE__))
+Vagrant.configure("2") do |minikube|
+  minikube.vm.box = "ubuntu/bionic64"
+  minikube.vm.define "minikube" do |subminikube|
+    subminikube.vm.network :private_network, ip: "10.1.43.10"
+    subminikube.vm.hostname = "minikube"
+    subminikube.ssh.forward_agent = true
+    subminikube.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}12", id: "ssh"
+    subminikube.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 4096]
+      v1.customize ["modifyvm", :id, "--name", "minikube"]  
+    end
+    subminikube.vm.provision "shell", path: "scripts/install.sh"
+    #subminikube.vm.provision "shell", path: "scripts/minikubes.sh", args: "10.1.42.10#{i} consul"
+    #subminikube.vm.provision "shell", path: "scripts/consulsrvcerts.sh", args: "consul vault vagrant"
+  end
+end

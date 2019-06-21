@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+current_dir = File.dirname(File.expand_path(__FILE__))
+Vagrant.configure("2") do |fss|
+  fss.vm.box = "centos/7"
+  fss.vm.define "fss" do |subfss|
+    subfss.vm.network :private_network, ip: "10.50.10.100"
+    subfss.vm.hostname = "fss"
+    subfss.ssh.forward_agent = true
+    #subfss.vm.network "forwarded_port", guest: 80, host: 8090
+    subfss.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 3072]
+      v1.customize ["modifyvm", :id, "--name", "fss"]  
+    end
+    subfss.vm.provision "shell", path: "scripts/install.sh"
+    soubfss.vm.provision "shell", path: "scripts/fsInstallStart.sh"
+    subfss.vm.provision :reload
+  end
+end

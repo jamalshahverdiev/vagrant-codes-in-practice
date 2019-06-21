@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: true
+  vars:
+    lbIP: 192.168.120.122
+    ngweb1: 192.168.120.11
+    ngweb2: 192.168.120.12
+  pre_tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+
+    - name: Install list of packages
+      apt: name={{item}} state=installed
+      with_items:
+           - haproxy
+
+    - name: Enable security update
+      command: echo "unattended-upgrades  unattended-upgrades/enable_auto_updates boolean true" | sudo debconf-set-selections
+
+    - name: Activate security update
+      command: dpkg-reconfigure --priority=low -f noninteractive unattended-upgrades
+
+  roles:
+    - haproxys
+

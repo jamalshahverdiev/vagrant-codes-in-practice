@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+sshportPoint="200"
+gitLabIP='10.1.42.212'
+current_dir = File.dirname(File.expand_path(__FILE__))
+Vagrant.configure("2") do |vmconf|
+  vmconf.vm.box = "centos/7"
+  vmconf.vm.define "jenkins" do |jenkins|
+    jenkins.vm.network :private_network, ip: "10.1.42.120"
+    jenkins.vm.hostname = "jenkins"
+    jenkins.ssh.forward_agent = true
+    jenkins.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}21", id: "ssh"
+    jenkins.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 1024]
+      v1.customize ["modifyvm", :id, "--name", "jenkins"]  
+    end
+    jenkins.vm.provision "shell", path: "scripts/install.sh"
+    jenkins.vm.provision :reload
+    jenkins.vm.provision "shell", path: "scripts/jenkinsinstall.sh"
+  end
+  vmconf.vm.define "gitlab" do |gitlab|
+    gitlab.vm.network :private_network, ip: "#{gitLabIP}"
+    gitlab.vm.hostname = "gitlab"
+    gitlab.ssh.forward_agent = true
+    gitlab.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}22", id: "ssh"
+    gitlab.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 3072]
+      v1.customize ["modifyvm", :id, "--name", "gitlab"]
+    end
+    gitlab.vm.provision "shell", path: "scripts/install.sh"
+    gitlab.vm.provision :reload 
+    gitlab.vm.provision "shell", path: "scripts/gitlabinstall.sh", args: "#{gitLabIP}"
+  end
+end

@@ -1,0 +1,11 @@
+Vagrant.configure("2") do |config|
+  config.vm.define "docker" do |a|
+    a.vm.provider "docker" do |d|
+      d.build_dir = "."
+      d.build_args = ["-t=nodker"]
+      d.ports = ["80:3000"]
+      d.name = "nodker"
+      d.remains_running = true
+    end
+  end
+end

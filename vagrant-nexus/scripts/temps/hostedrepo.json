@@ -1,0 +1,12 @@
+{
+    "data": {
+        "id": "appRepo1",
+        "name": "appRepo",
+        "exposed": true,
+        "repoType": "hosted",
+        "repoPolicy": "RELEASE",
+        "providerRole": "org.sonatype.nexus.proxy.repository.WebSiteRepository",
+        "provider": "site",
+        "format": "site"
+   }
+}

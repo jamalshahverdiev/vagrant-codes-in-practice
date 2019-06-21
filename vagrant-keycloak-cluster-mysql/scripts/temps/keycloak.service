@@ -1,0 +1,13 @@
+[Unit]
+Description=Keycloak Service
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c "/app/userName/bin/standalone.sh --server-config=standalone-ha.xml -Djboss.bind.address=0.0.0.0 -Djboss.bind.address.management=0.0.0.0 -Djboss.http.port=8080 & echo $! > /app/userName/userName.pid"
+PIDFile=/app/userName/userName.pid
+Restart=always
+Type=simple
+User=userName
+
+[Install]
+WantedBy=multi-user.target

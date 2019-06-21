@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+sshportPoint = "200"
+current_dir = File.dirname(File.expand_path(__FILE__))
+consulDomain = "consul.epam.com"
+Vagrant.configure("2") do |consulserver|
+  require './vagrant-provision-reboot-plugin'
+  consulserver.vm.box = "centos/7"
+  (1..3).each do |i|
+     consulserver.vm.define "consulserver#{i}" do |subconsulserver|
+       subconsulserver.vm.network :private_network, ip: "10.1.42.10#{i}"
+       subconsulserver.vm.hostname = "consuls#{i}"
+       subconsulserver.ssh.forward_agent = true
+       subconsulserver.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}1#{i}", id: "ssh"
+       subconsulserver.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "consul_s#{i}"]  
+       end
+       subconsulserver.vm.provision "shell", path: "scripts/install.sh", args: "consul vault"
+       subconsulserver.vm.provision :unix_reboot
+       subconsulserver.vm.provision "shell", path: "scripts/consulservers.sh", args: "10.1.42.10#{i} consul"
+       subconsulserver.vm.provision "shell", path: "scripts/consulsrvcerts.sh", args: "consul vault vagrant"
+     end
+  end
+  (1..2).each do |i|
+     consulserver.vm.define "consulagent#{i}" do |consulagent|
+       consulagent.vm.network :private_network, ip: "10.1.42.20#{i}"
+       consulagent.vm.hostname = "convalc#{i}"
+       consulagent.ssh.forward_agent = true
+       consulagent.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}2#{i}", id: "ssh"
+       consulagent.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "conval_c#{i}"]  
+       end
+       consulagent.vm.provision "shell", path: "scripts/install.sh", args: "consul vault" 
+       consulagent.vm.provision :unix_reboot
+       consulagent.vm.provision "shell", path: "scripts/consulclients.sh", args: "10.1.42.20#{i} consul"
+       consulagent.vm.provision "shell", path: "scripts/vaultconfigure.sh", args: "10.1.42.20#{i} vault #{consulDomain}"
+       consulagent.vm.provision "shell", path: "scripts/consulagentcerts.sh", args: "consul vault vagrant"
+     end
+  end
+end

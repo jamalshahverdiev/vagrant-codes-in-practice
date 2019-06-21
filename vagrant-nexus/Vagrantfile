@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+current_dir = File.dirname(File.expand_path(__FILE__))
+nexusUser = "ArtifactAdmin"
+ipAddr = "192.168.120.137"
+appName = "cronosrepo"
+Vagrant.configure("2") do |golmos|
+  require './vagrant-provision-reboot-plugin'
+  golmos.vm.box = "centos/7"
+  golmos.vm.define "orasmus" do |orasmusvm|
+    orasmusvm.vm.network :private_network, ip: ipAddr
+    orasmusvm.vm.hostname = "orasmus"
+    orasmusvm.ssh.forward_agent = true
+    orasmusvm.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 1024]
+      v1.customize ["modifyvm", :id, "--name", "orasmus"]
+    end
+    orasmusvm.vm.provision "shell", path: "scripts/install.sh"
+    orasmusvm.vm.provision "shell", path: "scripts/mvncompile.sh"
+    orasmusvm.vm.provision "shell", path: "scripts/nexus2install.sh"
+    orasmusvm.vm.provision :unix_reboot
+    orasmusvm.vm.provision "shell", path: "scripts/createrepoUploadartifacts.sh", args: "#{nexusUser} #{ipAddr} #{appName}"
+  end
+end

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user-request>
+  <data>
+    <userId>newAdmin</userId>
+    <email>newAdmin@gmail.com</email>
+    <status>active</status>
+    <firstName>newAdmin</firstName>
+    <resourceURI>http://serverIP:8081/service/local/roles/repository-any-full</resourceURI>
+    <roles>
+      <role>nx-admin</role>
+    </roles>
+    <lastName>Class</lastName>
+    <password>newAdmin123</password>
+  </data>
+</user-request>

@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    server_name {{ webIP }};
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/home/{{ uwsgi_user }}/myapp/myapp.sock;
+        access_log /var/log/{{ logname }}-logs/datanyze-access.log;
+        error_log /var/log/{{ logname }}-logs/datanyze-error.log;
+    }
+}

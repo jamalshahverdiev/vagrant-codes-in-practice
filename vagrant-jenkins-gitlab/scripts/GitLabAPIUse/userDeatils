@@ -1,0 +1,7 @@
+{
+  "name": "user1",
+  "username": "user1",
+  "password": "12345678",
+  "email": "user1@example.com",
+  "skip_confirmation": "true"
+}
