@@ -1,17 +1,17 @@
 vars:
   sshportPoint: 10000
-  reactAppGClientID: 997463258324-q3b8tnv25ca5f4vomh6uiu0e8b63h3ie.apps.googleusercontent.com
-  reactAppRecapSiteKey: 6Lc-6JcUAAAAAMwgEDXErnGybzPEK_2eviV6GfuN
-  repoName: email-sender-worker
-  frontRepoName: reactive-smb
-  sbsRepoName: sbs-ws-server
-  backRepoName: reactor
-  serviceName: javaemail
-  nodeServiceName: sbswssrv
-  domainName: prospectsmb.com
-  dbName: smbdb
-  dbUser: smbuser
-  dbPass: UYuedopi_klakd123e88jkl
+  reactAppGClientID: 
+  reactAppRecapSiteKey: 
+  repoName: 
+  frontRepoName: 
+  sbsRepoName: 
+  backRepoName: 
+  serviceName: 
+  nodeServiceName:
+  domainName: 
+  dbName:
+  dbUser: 
+  dbPass:
   javaAppUser: appuser
   remotePath: /root
   publicHtml: /var/www/public_html
@@ -19,10 +19,10 @@ vars:
   lbIP: 10.1.44.100
   backendIP1: 10.1.44.11
   backendIP2: 10.1.44.12
-  gitUser: devops_user
-  gitPass: 9LsrBRnkj4VF~dXq
-  gitDomain: progit.tk
-  rmqUser: mqadmin
-  rmqPass: UHkjdnedm_io8u3e23kdjsoda
-  smtpUser: zarina@notify.prospectsmb.com
-  smtpPass: FFdCb653DSWasdwf
+  gitUser: 
+  gitPass: 
+  gitDomain: 
+  rmqUser: 
+  rmqPass: 
+  smtpUser: 
+  smtpPass: 
