@@ -19,7 +19,7 @@ Vagrant.configure("2") do |debconf|
   end
 
   debconf.vm.define "zbxpgsql" do |zbxpgsql|
-    zbxpgsql.vm.box = "debian/stretch64"
+    zbxpgsql.vm.box = "centos/7"
     zbxpgsql.vm.network :private_network, ip: vars['subnet'] + '55'
     zbxpgsql.vm.hostname = "zbxpgsql"
     zbxpgsql.ssh.forward_agent = true
