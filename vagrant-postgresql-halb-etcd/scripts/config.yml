@@ -1,0 +1,28 @@
+vars:
+  sshportPoint: 10000
+  reactAppGClientID: 
+  reactAppRecapSiteKey: 
+  repoName: 
+  frontRepoName: 
+  sbsRepoName: 
+  backRepoName: 
+  serviceName: 
+  nodeServiceName:
+  domainName: 
+  dbName:
+  dbUser: 
+  dbPass:
+  javaAppUser: appuser
+  remotePath: /root
+  publicHtml: /var/www/public_html
+  pgSqlIP: 10.1.44.110
+  lbIP: 10.1.44.100
+  backendIP1: 10.1.44.11
+  backendIP2: 10.1.44.12
+  gitUser: 
+  gitPass: 
+  gitDomain: 
+  rmqUser: 
+  rmqPass: 
+  smtpUser: 
+  smtpPass: 
