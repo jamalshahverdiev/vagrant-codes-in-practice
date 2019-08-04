@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+vars = YAML.load_file('depvars.yml')
+
+Vagrant.configure("2") do |debconf|
+  debconf.vm.box = "debian/stretch64"
+  debconf.vm.define "zabsrv" do |zabsrv|
+    zabsrv.vm.network :private_network, ip: vars['subnet'] + '100'
+    zabsrv.vm.hostname = "zabsrv"
+    zabsrv.ssh.forward_agent = true
+    zabsrv.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 10, id: "ssh"
+    zabsrv.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--name", "zabsrv", "--memory", "2048", "--cpus", "2"]
+    end
+    #zabsrv.vm.provision "shell", path: "scripts/globalscript.sh"
+    #zabsrv.vm.provision :reload
+    zabsrv.vm.provision "shell", path: "scripts/zabbixinstall.sh"
+  end
+
+#  debconf.vm.define "pgsql" do |pgsql|
+#    pgsql.vm.network :private_network, ip: vars['subnet'] + '55'
+#    pgsql.vm.hostname = "pgsql"
+#    pgsql.ssh.forward_agent = true
+#    pgsql.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 55, id: "ssh"
+#    pgsql.vm.provider :virtualbox do |v1|
+#      v1.customize ["modifyvm", :id, "--name", "pgsql", "--memory", "1024", "--cpus", "2"]
+#    end
+#    pgsql.vm.provision "shell", path: "scripts/pgsql.sh"
+#    pgsql.vm.provision :reload
+#    #pgsql.vm.provision "shell", path: "scripts/configureETCD.sh", args: [vars['subnet']]
+#  end
+
+
+#  (1..3).each do |i|
+#     debconf.vm.define "pg#{i}" do |pgconfig|
+#       pgconfig.vm.network :private_network, ip: vars['subnet'] + "1#{i}"
+#       pgconfig.vm.hostname = "pg#{i}"
+#       pgconfig.ssh.forward_agent = true
+#       pgconfig.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + i, id: "ssh"
+#       pgconfig.vm.provider :virtualbox do |v1|
+#         v1.customize ["modifyvm", :id, "--name", "pg#{i}", "--memory", "1024", "--cpus", "1"]
+#       end
+#       pgconfig.vm.provision "shell", path: "scripts/globalscript.sh", args: pgconfig.vm.hostname
+#       pgconfig.vm.provision :reload
+#       pgconfig.vm.provision "shell", path: "scripts/configurePatroni.sh", args: [vars['subnet'], "1#{i}"]
+#     end
+#  end
+end
