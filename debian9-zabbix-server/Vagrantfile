@@ -18,17 +18,17 @@ Vagrant.configure("2") do |debconf|
     zabsrv.vm.provision "shell", path: "scripts/zabbixinstall.sh"
   end
 
-  debconf.vm.define "pgsql" do |pgsql|
-    pgsql.vm.box = "debian/stretch64"
-    pgsql.vm.network :private_network, ip: vars['subnet'] + '55'
-    pgsql.vm.hostname = "pgsql"
-    pgsql.ssh.forward_agent = true
-    pgsql.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 55, id: "ssh"
-    pgsql.vm.provider :virtualbox do |v1|
-      v1.customize ["modifyvm", :id, "--name", "pgsql", "--memory", "1024", "--cpus", "2"]
+  debconf.vm.define "zbxpgsql" do |zbxpgsql|
+    zbxpgsql.vm.box = "debian/stretch64"
+    zbxpgsql.vm.network :private_network, ip: vars['subnet'] + '55'
+    zbxpgsql.vm.hostname = "zbxpgsql"
+    zbxpgsql.ssh.forward_agent = true
+    zbxpgsql.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 55, id: "ssh"
+    zbxpgsql.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--name", "zbxpgsql", "--memory", "1024", "--cpus", "2"]
     end
-    pgsql.vm.provision "shell", path: "scripts/pgsql.sh"
-    pgsql.vm.provision :reload
-    pgsql.vm.provision "shell", path: "scripts/configureETCD.sh", args: [vars['subnet']]
+    zbxpgsql.vm.provision "shell", path: "scripts/zbxpgsql.sh"
+    zbxpgsql.vm.provision :reload
+    zbxpgsql.vm.provision "shell", path: "scripts/configureETCD.sh", args: [vars['subnet']]
   end
 end
