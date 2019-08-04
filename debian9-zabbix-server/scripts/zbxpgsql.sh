@@ -12,3 +12,8 @@ systemctl stop firewalld && sudo systemctl disable firewalld
 
 yum install -y https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
 yum install -y postgresql10-server postgrseql10 postgresql-devel
+rpm -Uvh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
+yum install -y zabbix-agent
+sed -i 's/Server=127.0.0.1/Server=10.3.55.100/g' /etc/zabbix/zabbix_agentd.conf
+sed -i 's/Hostname=Zabbix server/Hostname=PgSQLSrv/g' /etc/zabbix/zabbix_agentd.conf
+systemctl enable zabbix-agent && systemctl restart zabbix-agent
