@@ -27,3 +27,8 @@ $ ansible linux -m copy -a 'src=./hosts.yml dest=/tmp/hosts.yml'
 ```bash
 $ ansible linux -m copy -a 'remote_src=yes src=/tmp/hosts.yml dest=/tmp/hosts1.yml'
 ```
+
+#### Execute **df -h /** command inside of all linux servers under **linux** group and get response to the console:
+```bash
+$ ansible linux -m command -a 'df -h /' -o
+```
