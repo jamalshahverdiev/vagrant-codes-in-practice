@@ -5,11 +5,18 @@ $ cat hosts
 controller ansible_connection=local
 
 [centos]
-centos1 ansible_ssh_user=root ansible_ssh_pass='freebsd' ansible_ssh_port=10022 ansible_become=true
-centos[2:3] ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
+centos1 ansible_ssh_pass='freebsd' ansible_ssh_port=10022 
+centos[2:3] ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022
 
 [debian]
-debian[1:3]:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
+debian[1:3]:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant'
+
+[centos:vars]
+ansible_ssh_user=root
+ansible_become=true
+
+[debian:vars]
+ansible_become=true
 ```
 
 #### In the same folder will be stored **ansible.cfg** file with the following content: 
@@ -24,4 +31,9 @@ host_key_checking = False
 #### Check connectivity between hosts:
 ```bash
 $ ansible all -m ping
+```
+
+#### Look at hosts list:
+```bash
+$ ansible all --list-hosts
 ```
