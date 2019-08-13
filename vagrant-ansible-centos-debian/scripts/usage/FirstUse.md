@@ -5,14 +5,11 @@ $ cat hosts
 controller ansible_connection=local
 
 [centos]
-centos1 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
-centos2 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
-centos3 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
+centos1 ansible_ssh_user=root ansible_ssh_pass='freebsd' ansible_ssh_port=10022 ansible_become=true
+centos[2:3] ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
 
 [debian]
-debian1:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
-debian2:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
-debian3:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
+debian[1:3]:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
 ```
 
 #### In the same folder will be stored **ansible.cfg** file with the following content: 
