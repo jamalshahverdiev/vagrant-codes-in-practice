@@ -133,6 +133,8 @@ $ cat hosts.json
 ```bash
 $ ansible all -m ping -o
 $ ansible linux -m ping -o
+$ ansible all -i hosts.yml -m ping -o
+$ ansible all -i hosts.json -m ping -o
 ```
 
 #### Look at hosts list:
