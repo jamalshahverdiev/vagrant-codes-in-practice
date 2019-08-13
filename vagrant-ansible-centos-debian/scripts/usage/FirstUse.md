@@ -2,14 +2,14 @@
 ```bash
 $ cat hosts
 [centos]
-centos1 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
-centos2 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
-centos3 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
+centos1 ansible_user=vagrant ansible_pass='vagrant' ansible_port=10022 ansible_become=true
+centos2 ansible_user=vagrant ansible_pass='vagrant' ansible_port=10022 ansible_become=true
+centos3 ansible_user=vagrant ansible_pass='vagrant' ansible_port=10022 ansible_become=true
 
 [debian]
-debian1 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
-debian2 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
-debian3 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
+debian1 ansible_user=vagrant ansible_pass='vagrant' ansible_port=10022 ansible_become=true
+debian2 ansible_user=vagrant ansible_pass='vagrant' ansible_port=10022 ansible_become=true
+debian3 ansible_user=vagrant ansible_pass='vagrant' ansible_port=10022 ansible_become=true
 ```
 
 #### In the same folder will be stored **ansible.cfg** file with the following content: 
