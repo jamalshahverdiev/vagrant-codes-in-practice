@@ -22,6 +22,9 @@ ansible_become=true
 centos
 debian
 
+[linux:vars]
+ansible_ssh_port=10022
+
 [all:vars]
 ansible_ssh_port=10022
 ```
