@@ -1,15 +1,18 @@
 #### Tu execute ansible commands under **vagrant** user just create **hosts** file with the following content:
 ```bash
 $ cat hosts
+[control]
+controller ansible_connection=local
+
 [centos]
 centos1 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
 centos2 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
 centos3 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
 
 [debian]
-debian1 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
-debian2 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
-debian3 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_ssh_port=10022 ansible_become=true
+debian1:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
+debian2:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
+debian3:10022 ansible_ssh_user=vagrant ansible_ssh_pass='vagrant' ansible_become=true
 ```
 
 #### In the same folder will be stored **ansible.cfg** file with the following content: 
