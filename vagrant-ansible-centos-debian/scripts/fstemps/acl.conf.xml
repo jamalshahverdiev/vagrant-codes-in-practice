@@ -1,0 +1,20 @@
+<configuration name="acl.conf" description="Network Lists">
+  <network-lists>
+    <list name="lan" default="allow">
+      <node type="allow" cidr="fsSubnet.0/24"/>
+    </list>
+	
+    <list name="localnet.auto" default="allow">
+      <node type="allow" cidr="fsSubnet.0/24"/>
+    </list>
+
+    <list name="loopback.auto" default="allow">
+      <node type="allow" cidr="fsSubnet.0/24"/>
+    </list>
+	
+    <list name="domains" default="deny">
+      <node type="allow" cidr="fsSubnet.0/24"/>
+    </list>
+</network-lists>
+</configuration>
+

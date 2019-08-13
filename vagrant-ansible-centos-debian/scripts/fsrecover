@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ $# -lt 1 ]
+then
+    echo "Usage : $0 fsrecover"
+    exit
+fi
+
+case "$1" in
+  fsrecover)
+     #/usr/bin/fs_cli -x "sofia profile internal restart"
+     #/usr/bin/fs_cli -x "sofia profile external restart"
+     #/bin/sleep 1
+     /bin/echo Log date: `date +%F-%H-%M-%S` >> /var/log/test.log
+     /usr/bin/fs_cli -x "sofia recover"
+     ;;
+  *)
+     echo "Signal number $1 is not processed"
+     ;;
+esac

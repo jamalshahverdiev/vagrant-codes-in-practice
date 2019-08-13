@@ -1,0 +1,11 @@
+<configuration name="fifo.conf" description="FIFO Configuration">
+  <settings>
+    <param name="odbc-dsn" value="pgsql://hostaddr=pgip dbname=dbName user=dbUser password='dbPass' options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
+    <param name="delete-all-outbound-member-on-startup" value="false"/>
+  </settings>
+  <fifos>
+    <fifo name="cool_fifo@$${domain}" importance="0">
+      <!--<member timeout="60" simo="1" lag="20">{member_wait=nowait}user/1005@$${domain}</member>-->
+    </fifo>
+  </fifos>
+</configuration>

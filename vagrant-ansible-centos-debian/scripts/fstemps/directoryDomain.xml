@@ -1,0 +1,23 @@
+<include>
+  <domain name="$${domain}">
+    <params>
+      <param name="dial-string" value="{^^:sip_invite_domain=${dialed_domain}:presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(*/${dialed_user}@${dialed_domain})},${verto_contact(${dialed_user}@${dialed_domain})}"/>
+      <param name="jsonrpc-allowed-methods" value="verto"/>
+      <param name="jsonrpc-allowed-event-channels" value="demo,conference,presence"/> 
+    </params>
+
+    <variables>
+      <variable name="record_stereo" value="true"/>
+      <variable name="default_gateway" value="$${default_provider}"/>
+      <variable name="default_areacode" value="$${default_areacode}"/>
+      <variable name="transfer_fallback_extension" value="operator"/>
+    </variables>
+	<groups>
+      <group name="test">
+	<users>
+	  <X-PRE-PROCESS cmd="include" data="$${domain}/*.xml"/>
+	</users>
+      </group>
+    </groups>
+  </domain>
+</include>

@@ -1,0 +1,65 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+vars = YAML.load_file('depvars.yml')
+
+Vagrant.configure("2") do |ansconf|
+  ansconf.vm.box = "debian/stretch64"
+  ansconf.vm.define "controller" do |controller|
+    controller.vm.network :private_network, ip: vars['subnet'] + '41'
+    controller.vm.hostname = "controller"
+    controller.ssh.forward_agent = true
+    controller.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 41, id: "ssh"
+    controller.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--name", "controller", "--memory", "1024", "--cpus", "2"]
+    end
+    controller.vm.provision "shell", path: "scripts/debGLscript.sh"
+    controller.vm.provision "shell", path: "scripts/installAnsible.sh"
+    #controller.vm.provision "shell", path: "scripts/installConfigureNginx.sh", args: [vars['domainname']]
+    #controller.vm.provision "shell", path: "scripts/installConfigureVerto.sh", args: [vars['domainname'], vars['sipUserPass']]
+  end
+  ansconf.vm.define "dnsmasq" do |dnsmasq|
+    dnsmasq.vm.box = "centos/7"
+    dnsmasq.vm.network :private_network, ip: vars['subnet'] + '40'
+    dnsmasq.vm.hostname = "dnsmasq"
+    dnsmasq.ssh.forward_agent = true
+    dnsmasq.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 40, id: "ssh"
+    dnsmasq.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--name", "dnsmasq", "--memory", "1024", "--cpus", "2"]
+    end
+    dnsmasq.vm.provision "shell", path: "scripts/cos7GLscript.sh"
+    #dnsmasq.vm.provision "shell", path: "scripts/installConfigurePgSQL.sh", args: [vars['subnet'], vars['dbUser'], vars['dbPass'], vars['dbName']]
+  end
+  (1..3).each do |i|
+     ansconf.vm.define "debian#{i}" do |deb|
+       deb.vm.network :private_network, ip: vars['subnet'] + "1#{i}"
+       deb.vm.hostname = "fssrv#{i}"
+       deb.ssh.forward_agent = true
+       deb.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 6 + i, id: "ssh"
+       deb.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--name", "debian#{i}", "--memory", "1024", "--cpus", "2"]
+       end
+       deb.vm.provision "shell", path: "scripts/debGLscript.sh"
+       #deb.vm.provision "shell", path: "scripts/configureHeartbeat.sh", args: "fssrv#{i}"
+       #deb.vm.provision "shell", path: "scripts/installFS.sh", args: [vars['subnet'] + '50', vars['dbUser'], vars['dbPass'], vars['dbName']]
+       #deb.vm.provision "shell", path: "scripts/configureFS.sh", args: [vars['subnet'] + '100', vars['dbUser'], vars['dbPass'], vars['dbName'], vars['sipUserPass'], vars['sipDomain'], vars['subnet'] + '50']
+     end
+  end
+  (1..3).each do |i|
+     ansconf.vm.define "centos#{i}" do |centos|
+       centos.vm.box = "centos/7"
+       centos.vm.network :private_network, ip: vars['subnet'] + "2#{i}"
+       centos.vm.hostname = "centos#{i}"
+       centos.ssh.forward_agent = true
+       centos.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 2 + i, id: "ssh"
+       centos.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--name", "centos#{i}", "--memory", "1024", "--cpus", "2"]
+       end
+       centos.vm.provision "shell", path: "scripts/cos7GLscript.sh"
+       #centos.vm.provision "shell", path: "scripts/configureHeartbeat.sh", args: "fssrv#{i}"
+       #centos.vm.provision "shell", path: "scripts/installFS.sh", args: [vars['subnet'] + '50', vars['dbUser'], vars['dbPass'], vars['dbName']]
+       #centos.vm.provision "shell", path: "scripts/configureFS.sh", args: [vars['subnet'] + '100', vars['dbUser'], vars['dbPass'], vars['dbName'], vars['sipUserPass'], vars['sipDomain'], vars['subnet'] + '50']
+     end
+  end
+end
