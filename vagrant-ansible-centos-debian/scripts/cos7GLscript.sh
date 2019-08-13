@@ -6,6 +6,11 @@ yum install -y bash-completion wget expect gcc-c++ make unzip nfs-utils java-1.8
 timedatectl set-timezone 'Asia/Baku' && ntpdate 0.asia.pool.ntp.org
 echo -e "freebsd\nfreebsd" | passwd root
 sed -i.bak -e 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+cat <<EOF >> /etc/ssh/sshd_config
+Port 22
+Port 10022
+EOF
+
 systemctl restart sshd
 systemctl stop firewalld && systemctl disable firewalld
 echo "export JAVA_HOME=/usr/lib/jvm/$(ls /usr/lib/jvm/ | grep java-1.8.0-openjdk-)" >> ~/.bashrc

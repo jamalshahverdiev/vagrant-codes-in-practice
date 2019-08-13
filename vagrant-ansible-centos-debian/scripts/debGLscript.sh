@@ -11,6 +11,10 @@ timedatectl set-timezone 'Asia/Baku' && ntpdate 0.asia.pool.ntp.org
 echo -e "freebsd\nfreebsd" | passwd root
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+cat <<EOF >> /etc/ssh/sshd_config
+Port 22
+Port 10022
+EOF
 systemctl restart sshd
 
 cat <<EOF >> /etc/hosts

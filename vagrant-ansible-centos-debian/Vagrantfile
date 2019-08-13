@@ -34,7 +34,7 @@ Vagrant.configure("2") do |ansconf|
   (1..3).each do |i|
      ansconf.vm.define "debian#{i}" do |deb|
        deb.vm.network :private_network, ip: vars['subnet'] + "1#{i}"
-       deb.vm.hostname = "fssrv#{i}"
+       deb.vm.hostname = "debian#{i}"
        deb.ssh.forward_agent = true
        deb.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 6 + i, id: "ssh"
        deb.vm.provider :virtualbox do |v1|
