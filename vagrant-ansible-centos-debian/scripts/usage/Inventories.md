@@ -58,17 +58,21 @@ control:
 centos:
   hosts:
     centos1:
-      ansible_port: 10022
     centos2:
     centos3:
   vars:
-    ansible_user: root
+    ansible_ssh_port: 10022
+    ansible_ssh_pass: vagrant
+    ansible_ssh_user: vagrant
 debian:
   hosts:
     debian1:
     debian2:
     debian3:
   vars:
+    ansible_ssh_port: 10022
+    ansible_ssh_pass: vagrant
+    ansible_ssh_user: vagrant
     ansible_become: true
     ansible_become_pass: vagrant
 linux:
