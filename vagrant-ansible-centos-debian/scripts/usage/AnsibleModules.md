@@ -13,4 +13,7 @@ $ ansible centos1 -m setup
 $ ansible linux -m file -a 'path=/tmp/test state=touch'
 ```
 
-
+#### Change the permission of the file **/tmp/test** to the **600** under linuxes grouped as **linux**:
+```bash
+$ ansible linux -m file -a 'path=/tmp/test state=file mode=600'
+```
