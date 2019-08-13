@@ -19,3 +19,8 @@ $ cat ansible.cfg
 inventory = hosts
 host_key_checking = False
 ```
+
+#### Check connectivity between hosts:
+```bash
+$ ansible all -m ping
+```
