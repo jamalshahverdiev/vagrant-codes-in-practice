@@ -135,6 +135,7 @@ $ ansible all -m ping -o
 $ ansible linux -m ping -o
 $ ansible all -i hosts.yml -m ping -o
 $ ansible all -i hosts.json -m ping -o
+$ ansible all -i hosts.json -e 'ansible_ssh_port=10022' -m ping -o
 ```
 
 #### Look at hosts list:
