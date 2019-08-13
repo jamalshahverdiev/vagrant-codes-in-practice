@@ -17,3 +17,13 @@ $ ansible linux -m file -a 'path=/tmp/test state=touch'
 ```bash
 $ ansible linux -m file -a 'path=/tmp/test state=file mode=600'
 ```
+
+#### Copy from local source file **hosts.yml** to the remote destination **/tmp/hosts.yml** for all linuxes under **linux** group:
+```bash
+$ ansible linux -m copy -a 'src=./hosts.yml dest=/tmp/hosts.yml'
+```
+
+#### Copy from remote source file **/tmp/hosts.yml** to the remote destination **/tmp/hosts1.yml** for all linuxes under **linux** group:
+```bash
+$ ansible linux -m copy -a 'remote_src=yes src=/tmp/hosts.yml dest=/tmp/hosts1.yml'
+```
