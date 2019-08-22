@@ -1,7 +1,4 @@
-### The color format in the output like as following:
-* **Green = Success** 
-* **Yellow = Success with Changes**
-* **Red = Failure**
+[Online YAML Converter to JSON](http://yaml-online-parser.appspot.com/)
 
 #### Use **setup** module to get Linux internal variable from gathering facts:
 ```bash
