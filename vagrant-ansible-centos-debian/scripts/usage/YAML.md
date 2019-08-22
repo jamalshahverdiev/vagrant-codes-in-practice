@@ -1,68 +1,239 @@
 [Online YAML Converter to JSON](http://yaml-online-parser.appspot.com/)
 
-#### Use **setup** module to get Linux internal variable from gathering facts:
+#### The following code will convert YAML file to the JSON format:
 ```bash
-$ ansible centos1 -m setup
+$ cat test.yml
+# Every YAML file should start with three dashes
+---
+
+example_key_1: |
+  this is a string
+  that goes over
+  multiple lines
+
+# Every YAML file should end with three dots
+...
+$ python -c 'import yaml,pprint;pprint.pprint(yaml.load(open("test.yml").read()))'
+{'example_key_1': 'this is a string\nthat goes over\nmultiple lines\n'}
 ```
 
-#### Create **/tmp/test** file in all Linux machines named under **linux** under inventory file:
+#### Multiple lines as a single line:
 ```bash
-$ ansible linux -m file -a 'path=/tmp/test state=touch'
+$ cat test.yml
+# Every YAML file should start with three dashes
+---
+
+example_key_1: >
+  this is a string
+  that goes over
+  multiple lines
+
+# Every YAML file should end with three dots
+...
+$ cat integerYaml.yml
+# Every YAML file should start with three dashes
+---
+
+example_integer: 1
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Change the permission of the file **/tmp/test** to the **600** under linuxes grouped as **linux**:
+#### Boolian types in YAML:
 ```bash
-$ ansible linux -m file -a 'path=/tmp/test state=file mode=600'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+# false, False, FALSE, no, No, NO, off, Off, OFF
+# true, True, TRUE, yes, Yes, YES, on, On, ON
+
+# n.b. n does not equal false, y does not equal true
+
+is_false_01: false
+is_false_02: False
+is_false_03: FALSE
+is_false_04: no
+is_false_05: No
+is_false_06: NO
+is_false_07: off
+is_false_08: Off
+is_false_09: OFF
+is_false_10: n
+is_true_01: true
+is_true_02: True
+is_true_03: TRUE
+is_true_04: yes
+is_true_05: Yes
+is_true_06: YES
+is_true_07: on
+is_true_08: On
+is_true_09: ON
+is_true_10: y
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Copy from local source file **hosts.yml** to the remote destination **/tmp/hosts.yml** for all linuxes under **linux** group:
+#### Lists in YAML:
 ```bash
-$ ansible linux -m copy -a 'src=./hosts.yml dest=/tmp/hosts.yml'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+- item 1
+- item 2
+- item 3
+- item 4
+- item 5
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Copy from remote source file **/tmp/hosts.yml** to the remote destination **/tmp/hosts1.yml** for all linuxes under **linux** group:
+#### Inline block format:
 ```bash
-$ ansible linux -m copy -a 'remote_src=yes src=/tmp/hosts.yml dest=/tmp/hosts1.yml'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+{example_key_1: example_value_1, example_key_2: example_value_2}
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Execute **df -h /** command inside of all linux servers under **linux** group and get response to the console:
+#### Lists in YAML:
 ```bash
-$ ansible linux -m command -a 'df -h /' -o
+$ cat  test.yml
+---
+# Every YAML file should start with three dashes
+
+[example_list_entry_1, example_list_entry_2]
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Get UID of remote user for each os remote operation systems:
+#### Dictionary with value LIST:
 ```bash
-$ ansible linux -a 'id' -o
-debian1 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
-debian2 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
-debian3 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
-centos3 | CHANGED | rc=0 | (stdout) uid=1000(vagrant) gid=1000(vagrant) groups=1000(vagrant)
-centos2 | CHANGED | rc=0 | (stdout) uid=1000(vagrant) gid=1000(vagrant) groups=1000(vagrant)
-centos1 | CHANGED | rc=0 | (stdout) uid=1000(vagrant) gid=1000(vagrant) groups=1000(vagrant)
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+example_key_1:
+  - list item 1
+  - list item 2
+
+example_key_2:
+  - list item 3
+  - list item 4
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Use command module to create file in remote systems:
+#### List of dictionaries:
 ```bash
-$ ansible all -a 'touch /tmp/test_copy_module creates=/tmp/test_copy_module'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+- example_1:
+  - item_1
+  - item_2
+  - item_3
+
+- example_2:
+  - item_4
+  - item_5
+  - item_6
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Remove remote file:
+#### List of dictionary keys with list of items:
 ```bash
-$ ansible all -a 'rm /tmp/test_copy_module1 removes=/tmp/test_copy_module1'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+example_dictionary_1:
+  - example_dictionary_2:
+    - 1
+    - 2
+    - 3
+  - example_dictionary_2:
+    - 4
+    - 5
+    - 6
+  - example_dictionary_4:
+    - 7
+    - 8
+    - 9
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Remove file with file module:
+#### List of items with dict values:
 ```bash
-$ ansible all -m file -a 'path=/tmp/test_copy_module state=absent'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+- Aston Martin:
+    year_founded: 1913
+    website: astonmartin.com
+- Fiat:
+    year_founded: 1899
+    website: fiat.com
+- Ford:
+    year_founded: 1903
+    website: ford.com
+- Vauxhall:
+    year_founded: 1857
+    website: vauxhall.co.uk
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Create file with mode in the remote **centos1** then fet this file from remote to the local:
+#### Last example:
 ```bash
-$ ansible centos1 -m file -a 'path=/tmp/test_modules.txt state=touch mode=600'
-$ ansible centos1 -m fetch -a 'src=/tmp/test_modules.txt dest=/tmp/test_modules.txt'
+$ cat test.yml
+---
+# Every YAML file should start with three dashes
+
+- Aston Martin:
+    year_founded: 1913
+    website: astonmartin.com
+    founded_by:
+      - Lionel Martin
+      - Robert Bamford
+- Fiat:
+    year_founded: 1899
+    website: fiat.com
+    founded_by:
+      - Giovanni Agnelli
+- Ford:
+    year_founded: 1903
+    website: ford.com
+    founded_by:
+      - Henry Ford
+- Vauxhall:
+    year_founded: 1857
+    website: vauxhall.co.uk
+    founded_by:
+      - Alexander Wilson
+
+# Every YAML file should end with three dots
+...
 ```
 
-#### Look at the documentation of the **file** module with **ansible-doc** command:
-```bash
-$ ansible-doc file
-```
+### Links
+[YAML official page](http://www.yaml.org/spec/1.2/spec.html)
+[WIKI Page](https://en.wikipedia.org/wiki/YAML)
+[StackOverFlow](https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-over-multiple-lines)
