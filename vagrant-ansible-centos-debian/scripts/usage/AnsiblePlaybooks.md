@@ -2,31 +2,33 @@
 ```bash
 $ cat motd_playbook.yml
 ---
-# YAML documents begin with the document separator ---
-
-# The minus in YAML this indicates a list item.  The playbook contains a list
-# of plays, with each play being a dictionary
 -
-
-  # Target: where our play will run and options it will run with
-  hosts: centos
-  user: root
-
-  # Variable: variables that will apply to the play, on all target systems
-
-  # Task: the list of tasks that will be executed within the playbook
+  hosts: linux
+  vars:
+    motd_centos: "Welcome to CentOS Linux - Ansible Rocks\n"
+    motd_debian: "Welcome to Debian Linux - Ansible Rocks\n"
   tasks:
     - name: Configure a MOTD (message of the day)
       copy:
-        src: centos_motd
+        content: "{{ motd_centos }}"
         dest: /etc/motd
+      notify: MOTD changed
+      when: ansible_distribution == "CentOS"
+
+    - name: Configure a MOTD (message of the day)
+      copy:
+        content: "{{ motd_debian }}"
+        dest: /etc/motd
+      notify: MOTD changed
+      when: ansible_distribution == "Debian"
 
   # Handlers: handlers that are executed as a notify key from a task
-
-  # Roles: list of roles to be imported into the play
-
-# Three dots indicate the end of a YAML document
+  handlers:
+    - name: MOTD changed
+      debug:
+        msg: The MOTD was changed
 ...
+
 $ cat ansible.cfg
 [defaults]
 interpreter_python = /usr/bin/python
@@ -60,4 +62,19 @@ ansible_ssh_port=10022
 
 [all:vars]
 ansible_ssh_port=10022
+```
+
+#### Execute playbook:
+```bash
+$ ansible-playbook motd_playbook.yml 
+```
+
+#### Change Internal variable with Extra variable from console:
+```bash
+$ ansible-playbook motd_playbook.yml  --extra-vars='motd_debian="Changed Welcome from extra Var"'
+```
+
+#### Find all distributions:
+```bash
+$ ansible linux -i hosts -m setup | grep '"ansible_distribution":'
 ```
