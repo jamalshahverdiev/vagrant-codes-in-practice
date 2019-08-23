@@ -11,11 +11,11 @@ Port 22
 Port 10022
 EOF
 
-systemctl restart sshd
+setenforce permissive && systemctl restart sshd
 systemctl stop firewalld && systemctl disable firewalld
 echo "export JAVA_HOME=/usr/lib/jvm/$(ls /usr/lib/jvm/ | grep java-1.8.0-openjdk-)" >> ~/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/$(ls /usr/lib/jvm/ | grep java-1.8.0-openjdk-)" >> /home/vagrant/.bashrc
-sed -i.bak -e 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+#sed -i.bak -e 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 sed -i.bak -e 's/keepcache=0/keepcache=1/' /etc/yum.conf
 
 cat <<EOF >> /etc/hosts
