@@ -34,6 +34,7 @@ $ cat ansible.cfg
 interpreter_python = /usr/bin/python
 inventory = hosts
 host_key_checking = False
+jinja2_extensions = jinja2.ext.loopcontrols
 
 $ cat hosts
 [control]
