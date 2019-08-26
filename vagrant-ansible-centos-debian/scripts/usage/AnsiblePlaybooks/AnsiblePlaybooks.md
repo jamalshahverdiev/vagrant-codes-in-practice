@@ -35,6 +35,7 @@ interpreter_python = /usr/bin/python
 inventory = hosts
 host_key_checking = False
 jinja2_extensions = jinja2.ext.loopcontrols
+ansible_managed = Managed by Ansible - file:{file} - host:{host} - uid:{uid}
 
 $ cat hosts
 [control]

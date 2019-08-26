@@ -1,0 +1,25 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: Create group based on ansible_distribution
+      group_by:
+        key: "custom_{{ ansible_distribution | lower }}"
+
+-
+  hosts: custom_centos
+  tasks:
+    - name: Ping all in custom_centos
+      ping:
+
+-
+  hosts: custom_debian
+  tasks:
+    - name: Ping all in custom_centos
+      ping:
+
+    - name: Ansible create file if it doesn't exist example
+      file:
+         path: "/home/vagrant/devops_server.txt"
+         state: touch
+...
