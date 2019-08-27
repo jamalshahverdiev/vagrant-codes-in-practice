@@ -36,6 +36,7 @@ $ cat ansible.cfg
 interpreter_python = /usr/bin/python
 inventory = hosts
 host_key_checking = False
+forks=6
 ```
 
 #### To use inventory file from the YAML file just define **hosts.yml** file in the **ansible.cfg** file like as following:
@@ -45,6 +46,7 @@ $ cat ansible.cfg
 interpreter_python = /usr/bin/python
 inventory = hosts.yml
 host_key_checking = False
+forks=6
 ```
 
 #### Inventory YAML file will be as the folliwing:

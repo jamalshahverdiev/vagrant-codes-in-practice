@@ -36,6 +36,7 @@ inventory = hosts
 host_key_checking = False
 jinja2_extensions = jinja2.ext.loopcontrols
 ansible_managed = Managed by Ansible - file:{file} - host:{host} - uid:{uid}
+forks=6
 
 $ cat hosts
 [control]
