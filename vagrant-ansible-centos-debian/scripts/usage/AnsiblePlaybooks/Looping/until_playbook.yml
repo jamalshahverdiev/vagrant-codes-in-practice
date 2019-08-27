@@ -10,20 +10,11 @@
 
   # Task: the list of tasks that will be executed within the playbook
   tasks:
-    - name: Creating user
-      user:
-        name: "{{ item.key }}"
-        comment: "{{ item.value.full_name }}"
-      with_dict:
-        james:
-          full_name: James Spurin
-
-    - name: Create authorized key
-      authorized_key:
-        user: james
-        key: "{{ item }}"
-      with_file:
-        - /root/.ssh/id_rsa.pub
+    - name: Run a script until we hit 10
+      script: random.sh
+      register: result
+      retries: 100
+      until: result.stdout.find("10") != -1
 
 # Three dots indicate the end of a YAML document
 ...

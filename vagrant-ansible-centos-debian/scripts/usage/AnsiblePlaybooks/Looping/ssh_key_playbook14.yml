@@ -24,6 +24,7 @@
         key: "{{ item }}"
       with_file:
         - /root/.ssh/id_rsa.pub
+        - custom_key.pub
 
 # Three dots indicate the end of a YAML document
 ...
