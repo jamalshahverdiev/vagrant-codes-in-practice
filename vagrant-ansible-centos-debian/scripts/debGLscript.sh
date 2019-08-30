@@ -17,6 +17,12 @@ Port 10022
 EOF
 systemctl restart sshd
 
+if [ $(hostname -f) = dnsmasq -o $(hostname -f) = controller ]
+then
+    apt install -y python-pip
+    pip install hostsman dnspython
+fi
+
 cat <<EOF >> /etc/hosts
 127.0.0.1       localhost
 192.168.9.21    centos1
