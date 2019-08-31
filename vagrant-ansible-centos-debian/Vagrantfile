@@ -20,7 +20,7 @@ Vagrant.configure("2") do |ansconf|
     #controller.vm.provision "shell", path: "scripts/installConfigureVerto.sh", args: [vars['domainname'], vars['sipUserPass']]
   end
   ansconf.vm.define "dnsmasq" do |dnsmasq|
-    dnsmasq.vm.box = "centos/7"
+    dnsmasq.vm.box = "debian/stretch64"
     dnsmasq.vm.network :private_network, ip: vars['subnet'] + '40'
     dnsmasq.vm.hostname = "dnsmasq"
     dnsmasq.ssh.forward_agent = true
@@ -28,8 +28,7 @@ Vagrant.configure("2") do |ansconf|
     dnsmasq.vm.provider :virtualbox do |v1|
       v1.customize ["modifyvm", :id, "--name", "dnsmasq", "--memory", "1024", "--cpus", "2"]
     end
-    dnsmasq.vm.provision "shell", path: "scripts/cos7GLscript.sh"
-    #dnsmasq.vm.provision "shell", path: "scripts/installConfigurePgSQL.sh", args: [vars['subnet'], vars['dbUser'], vars['dbPass'], vars['dbName']]
+    dnsmasq.vm.provision "shell", path: "scripts/debGLscript.sh"
   end
   (1..3).each do |i|
      ansconf.vm.define "debian#{i}" do |deb|

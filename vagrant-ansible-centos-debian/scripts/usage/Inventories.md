@@ -33,6 +33,7 @@ ansible_ssh_port=10022
 ```bash
 $ cat ansible.cfg
 [defaults]
+#roles_path = common_roles/roles:specific_roles
 interpreter_python = /usr/bin/python
 inventory = hosts
 host_key_checking = False
