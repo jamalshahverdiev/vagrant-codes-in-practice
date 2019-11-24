@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-apt update && apt dist-upgrade -y
+apt update && DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 
 sed -i 's/"syntax on/syntax on/g' /etc/vim/vimrc
 echo 'set mouse-=a' > ~/.vimrc && source ~/.vimrc
