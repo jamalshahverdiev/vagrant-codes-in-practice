@@ -6,6 +6,7 @@ vars = YAML.load_file('depvars.yml')
 
 Vagrant.configure("2") do |ansconf|
   ansconf.vm.box = "debian/stretch64"
+  ansconf.vbguest.auto_update = false
   ansconf.vm.define "controller" do |controller|
     controller.vm.network :private_network, ip: vars['subnet'] + '41'
     controller.vm.hostname = "controller"
