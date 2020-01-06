@@ -32,19 +32,6 @@ Vagrant.configure("2") do |vmconf|
     gitlab.vm.provision :reload 
     gitlab.vm.provision "shell", path: "scripts/gitlabinstall.sh", args: "#{vars['subnet']}#{vars['gitlabPort']}"
   end
-  vmconf.vm.define "halb" do |halb|
-    halb.vm.network :private_network, ip: "#{vars['subnet']}#{vars['halbPort']}"
-    halb.vm.hostname = "halb"
-    halb.ssh.forward_agent = true
-    halb.vm.network :forwarded_port, guest: 22, host: "11#{vars['halbPort']}", id: "ssh"
-    halb.vm.provider :virtualbox do |v1|
-      v1.customize ["modifyvm", :id, "--memory", 3072]
-      v1.customize ["modifyvm", :id, "--name", "halb"]
-    end
-    halb.vm.provision "shell", path: "scripts/install.sh"
-    halb.vm.provision :reload
-    halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']}"
-  end
   (1..3).each do |i|
      vmconf.vm.define "consulsrv#{i}" do |consulsrv|
        consulsrv.vm.network :private_network, ip: "#{vars['subnet']}#{vars['consulIPPort']}#{i}"
@@ -70,9 +57,22 @@ Vagrant.configure("2") do |vmconf|
          v1.customize ["modifyvm", :id, "--memory", 1024]
          v1.customize ["modifyvm", :id, "--name", "pg#{i}"]
        end
-       pgsrv.vm.provision "shell", path: "scripts/install.sh"
-       pgsrv.vm.provision :reload
+       #pgsrv.vm.provision "shell", path: "scripts/install.sh"
+       #pgsrv.vm.provision :reload
        pgsrv.vm.provision "shell", path: "scripts/pgservers.sh", args: "#{vars['subnet']}#{vars['pgIPPort']}#{i} pg#{i}"
      end
+  end
+  vmconf.vm.define "halb" do |halb|
+    halb.vm.network :private_network, ip: "#{vars['subnet']}#{vars['halbPort']}"
+    halb.vm.hostname = "halb"
+    halb.ssh.forward_agent = true
+    halb.vm.network :forwarded_port, guest: 22, host: "11#{vars['halbPort']}", id: "ssh"
+    halb.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 3072]
+      v1.customize ["modifyvm", :id, "--name", "halb"]
+    end
+    halb.vm.provision "shell", path: "scripts/install.sh"
+    halb.vm.provision :reload
+    halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']}"
   end
 end

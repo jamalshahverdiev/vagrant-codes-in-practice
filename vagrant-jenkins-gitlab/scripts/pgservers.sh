@@ -116,7 +116,7 @@ After=syslog.target network.target
 Environment="PATRONI_LOGLEVEL=DEBUG"
 User=postgres
 Group=postgres
-PIDFile=/var/run/patroni/partoni.pid
+PIDFile=/var/run/patroni/patroni.pid
 PermissionsStartOnly=true
 ExecStartPre=-/bin/mkdir -p /var/run/patroni /var/log/patroni
 ExecStartPre=/bin/chown -R postgres:postgres /var/run/patroni /var/log/patroni
@@ -153,11 +153,13 @@ ExecStart=/usr/local/bin/etcd \
   --initial-cluster pg1=http://pg1:2380,pg2=http://pg2:2380,pg3=http://pg3:2380 \
   --initial-cluster-state new
 Restart=on-failure
-RestartSec=300s
+RestartSec=30s
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+chmod -R 700 /data/patroni
 
 systemctl daemon-reload
 
