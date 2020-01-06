@@ -59,7 +59,7 @@ Vagrant.configure("2") do |vmconf|
        end
        #pgsrv.vm.provision "shell", path: "scripts/install.sh"
        #pgsrv.vm.provision :reload
-       pgsrv.vm.provision "shell", path: "scripts/pgservers.sh", args: "#{vars['subnet']}#{vars['pgIPPort']}#{i} pg#{i}"
+       pgsrv.vm.provision "shell", path: "scripts/pgservers.sh", args: "#{vars['subnet']}#{vars['pgIPPort']}#{i} pg#{i} #{vars['pgPass']}"
      end
   end
   vmconf.vm.define "halb" do |halb|
@@ -73,6 +73,36 @@ Vagrant.configure("2") do |vmconf|
     end
     halb.vm.provision "shell", path: "scripts/install.sh"
     halb.vm.provision :reload
-    halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']}"
+    halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']} #{vars['pgPass']}"
+  end
+  (1..2).each do |i|
+     vmconf.vm.define "backend#{i}" do |backend|
+       backend.vm.network :private_network, ip: "#{vars['subnet']}#{vars['backendIPPort']}#{i}"
+       backend.vm.hostname = "backend#{i}"
+       backend.ssh.forward_agent = true
+       backend.vm.network :forwarded_port, guest: 22, host: "#{vars['backendIPPort']}11#{i}", id: "ssh"
+       backend.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "backend#{i}"]
+       end
+       #backend.vm.provision "shell", path: "scripts/install.sh"
+       #backend.vm.provision :reload
+       backend.vm.provision "shell", path: "scripts/backendservers.sh", args: "#{vars['subnet']}#{vars['backendIPPort']}#{i} backend#{i} #{vars['pgPass']}"
+     end
+  end
+  (1..2).each do |i|
+     vmconf.vm.define "dns#{i}" do |dns|
+       dns.vm.network :private_network, ip: "#{vars['subnet']}#{vars['dnsIPPort']}#{i}"
+       dns.vm.hostname = "dns#{i}"
+       dns.ssh.forward_agent = true
+       dns.vm.network :forwarded_port, guest: 22, host: "#{vars['dnsIPPort']}11#{i}", id: "ssh"
+       dns.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "dns#{i}"]
+       end
+       #dns.vm.provision "shell", path: "scripts/install.sh"
+       #dns.vm.provision :reload
+       dns.vm.provision "shell", path: "scripts/dnssrvs.sh", args: "#{vars['subnet']}#{vars['dnsIPPort']}#{i} dns#{i} #{vars['pgPass']}"
+     end
   end
 end

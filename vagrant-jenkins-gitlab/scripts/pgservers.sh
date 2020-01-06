@@ -94,7 +94,7 @@ postgresql:
             password: Rel1c2t0rp2r0lu
         superuser:
             username: postgres
-            password: P2stgre1sq1g1zl1p2r0l
+            password: $3
     parameters:
         unix_socket_directories: '.'
 

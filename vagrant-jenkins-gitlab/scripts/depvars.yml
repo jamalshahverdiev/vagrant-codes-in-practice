@@ -4,6 +4,8 @@ consulIPPort: '10'
 pgIPPort: '14'
 gitlabPort: '212'
 halbPort: '233'
+backendIPPort: ''
 jenkinsPort: '120'
 subnet: '10.1.42.'
+pgPass: 'P2stgre1sSuperUserp144w0rd'
 ...
