@@ -116,7 +116,7 @@ After=syslog.target network.target
 Environment="PATRONI_LOGLEVEL=DEBUG"
 User=postgres
 Group=postgres
-PIDFile=/var/run/patroni/consul.pid
+PIDFile=/var/run/patroni/partoni.pid
 PermissionsStartOnly=true
 ExecStartPre=-/bin/mkdir -p /var/run/patroni /var/log/patroni
 ExecStartPre=/bin/chown -R postgres:postgres /var/run/patroni /var/log/patroni
@@ -152,6 +152,8 @@ ExecStart=/usr/local/bin/etcd \
   --initial-cluster-token etcd-cluster-0 \
   --initial-cluster pg1=http://pg1:2380,pg2=http://pg2:2380,pg3=http://pg3:2380 \
   --initial-cluster-state new
+Restart=on-failure
+RestartSec=300s
 
 [Install]
 WantedBy=multi-user.target

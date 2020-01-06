@@ -18,7 +18,7 @@ then
     mkdir /etc/$1 /var/run/$1 /var/log/$1 && chown -R $1:$1 /etc/$1 /var/run/$1 /var/log/$1
 fi
 
-if [ "$(hostname)" = "pgsrv1" -o "$(hostname)" = "pgsrv2" -o "$(hostname)" = "pgsrv3" ]
+if [ "$(hostname)" = "pg1" -o "$(hostname)" = "pg2" -o "$(hostname)" = "pg3" ]
 then
 cat <<EOF > /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
