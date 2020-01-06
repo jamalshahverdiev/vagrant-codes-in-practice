@@ -39,6 +39,9 @@ curl -s --request GET "http://10.1.42.212/api/v4/projects?private_token=os9yy4NJ
 # GET list of groups
 curl -s --request GET "http://10.1.42.212/api/v4/groups?private_token=os9yy4NJdQxc-nsjbdzG" | jq
 
+# Get all repositories under group
+curl -s --request GET "https://10.1.42.212/api/v4/groups/$groupIDprospect/projects?private_token=os9yy4NJdQxc-nsjbdzG" | jq '.[].http_url_to_repo'
+
 # Search group for group 'prospect'
 curl -s --request GET "http://10.1.42.212/api/v4/groups?search=prospect&private_token=os9yy4NJdQxc-nsjbdzG" | jq
 
