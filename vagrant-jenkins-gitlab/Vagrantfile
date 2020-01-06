@@ -1,16 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-sshportPoint="200"
-gitLabIP='10.1.42.212'
-current_dir = File.dirname(File.expand_path(__FILE__))
+require 'yaml'
+vars = YAML.load_file('scripts/depvars.yml')
+
 Vagrant.configure("2") do |vmconf|
   vmconf.vm.box = "centos/7"
   vmconf.vm.define "jenkins" do |jenkins|
-    jenkins.vm.network :private_network, ip: "10.1.42.120"
+    jenkins.vm.network :private_network, ip: "#{vars['subnet']}#{vars['jenkinsPort']}"
     jenkins.vm.hostname = "jenkins"
     jenkins.ssh.forward_agent = true
-    jenkins.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}21", id: "ssh"
+    jenkins.vm.network :forwarded_port, guest: 22, host: "11#{vars['jenkinsPort']}", id: "ssh"
     jenkins.vm.provider :virtualbox do |v1|
       v1.customize ["modifyvm", :id, "--memory", 1024]
       v1.customize ["modifyvm", :id, "--name", "jenkins"]  
@@ -20,16 +20,59 @@ Vagrant.configure("2") do |vmconf|
     jenkins.vm.provision "shell", path: "scripts/jenkinsinstall.sh"
   end
   vmconf.vm.define "gitlab" do |gitlab|
-    gitlab.vm.network :private_network, ip: "#{gitLabIP}"
+    gitlab.vm.network :private_network, ip: "#{vars['subnet']}#{vars['gitlabPort']}"
     gitlab.vm.hostname = "gitlab"
     gitlab.ssh.forward_agent = true
-    gitlab.vm.network :forwarded_port, guest: 22, host: "#{sshportPoint}22", id: "ssh"
+    gitlab.vm.network :forwarded_port, guest: 22, host: "11#{vars['gitlabPort']}", id: "ssh"
     gitlab.vm.provider :virtualbox do |v1|
       v1.customize ["modifyvm", :id, "--memory", 3072]
       v1.customize ["modifyvm", :id, "--name", "gitlab"]
     end
     gitlab.vm.provision "shell", path: "scripts/install.sh"
     gitlab.vm.provision :reload 
-    gitlab.vm.provision "shell", path: "scripts/gitlabinstall.sh", args: "#{gitLabIP}"
+    gitlab.vm.provision "shell", path: "scripts/gitlabinstall.sh", args: "#{vars['subnet']}#{vars['gitlabPort']}"
+  end
+  vmconf.vm.define "halb" do |halb|
+    halb.vm.network :private_network, ip: "#{vars['subnet']}#{vars['halbPort']}"
+    halb.vm.hostname = "halb"
+    halb.ssh.forward_agent = true
+    halb.vm.network :forwarded_port, guest: 22, host: "11#{vars['halbPort']}", id: "ssh"
+    halb.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--memory", 3072]
+      v1.customize ["modifyvm", :id, "--name", "halb"]
+    end
+    halb.vm.provision "shell", path: "scripts/install.sh"
+    halb.vm.provision :reload
+    halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']}"
+  end
+  (1..3).each do |i|
+     vmconf.vm.define "consulsrv#{i}" do |consulsrv|
+       consulsrv.vm.network :private_network, ip: "#{vars['subnet']}#{vars['consulIPPort']}#{i}"
+       consulsrv.vm.hostname = "consulsrv#{i}"
+       consulsrv.ssh.forward_agent = true
+       consulsrv.vm.network :forwarded_port, guest: 22, host: "#{vars['consulIPPort']}11#{i}", id: "ssh"
+       consulsrv.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "consulsrv#{i}"]  
+       end
+       consulsrv.vm.provision "shell", path: "scripts/install.sh", args: "consul vault"
+       consulsrv.vm.provision :reload
+       consulsrv.vm.provision "shell", path: "scripts/consulservers.sh", args: "#{vars['subnet']}#{vars['consulIPPort']}#{i} consul"
+     end
+  end
+  (1..3).each do |i|
+     vmconf.vm.define "pgsrv#{i}" do |pgsrv|
+       pgsrv.vm.network :private_network, ip: "#{vars['subnet']}#{vars['pgIPPort']}#{i}"
+       pgsrv.vm.hostname = "pg#{i}"
+       pgsrv.ssh.forward_agent = true
+       pgsrv.vm.network :forwarded_port, guest: 22, host: "#{vars['pgIPPort']}11#{i}", id: "ssh"
+       pgsrv.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "pg#{i}"]
+       end
+       pgsrv.vm.provision "shell", path: "scripts/install.sh"
+       pgsrv.vm.provision :reload
+       pgsrv.vm.provision "shell", path: "scripts/pgservers.sh", args: "#{vars['subnet']}#{vars['pgIPPort']}#{i} pg#{i}"
+     end
   end
 end

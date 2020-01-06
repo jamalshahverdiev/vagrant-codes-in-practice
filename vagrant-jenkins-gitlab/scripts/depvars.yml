@@ -1,0 +1,9 @@
+---
+sshportPoint: '200'
+consulIPPort: '10'
+pgIPPort: '14'
+gitlabPort: '212'
+halbPort: '233'
+jenkinsPort: '120'
+subnet: '10.1.42.'
+...
