@@ -71,8 +71,8 @@ Vagrant.configure("2") do |vmconf|
       v1.customize ["modifyvm", :id, "--memory", 3072]
       v1.customize ["modifyvm", :id, "--name", "halb"]
     end
-    halb.vm.provision "shell", path: "scripts/install.sh"
-    halb.vm.provision :reload
+    #halb.vm.provision "shell", path: "scripts/install.sh"
+    #halb.vm.provision :reload
     halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']} #{vars['pgPass']}"
   end
   (1..2).each do |i|
@@ -102,7 +102,7 @@ Vagrant.configure("2") do |vmconf|
        end
        #dns.vm.provision "shell", path: "scripts/install.sh"
        #dns.vm.provision :reload
-       dns.vm.provision "shell", path: "scripts/dnssrvs.sh", args: "#{vars['subnet']}#{vars['dnsIPPort']}#{i} dns#{i} #{vars['pgPass']}"
+       dns.vm.provision "shell", path: "scripts/dnssrvs.sh", args: "#{vars['subnet']}#{vars['dnsIPPort']}#{i}"
      end
   end
 end

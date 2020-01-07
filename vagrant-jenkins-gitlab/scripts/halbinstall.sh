@@ -34,7 +34,7 @@ listen postgres
 EOF
 
 systemctl enable haproxy && systemctl start haproxy
-
+sleep 3
 PGPASSWORD=$2 psql -h $1 -p 5000 -c "CREATE DATABASE appdb;" -U postgres
 PGPASSWORD=$2 psql -h $1 -p 5000 -c "CREATE USER appuser WITH PASSWORD 'Appp244f0rD2t2b2s1d1r';" -U postgres
 PGPASSWORD=$2 psql -h $1 -p 5000 -c "GRANT ALL PRIVILEGES ON DATABASE appdb TO appuser;" -U postgres
