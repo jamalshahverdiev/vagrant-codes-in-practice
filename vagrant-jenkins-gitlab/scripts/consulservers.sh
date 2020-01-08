@@ -76,3 +76,8 @@ EOF
 
 chown -R $2:$2 /usr/local/bin/$2 /var/$2/data /var/log/$2 /etc/$2 /var/run/$2
 systemctl start $2.service && systemctl enable $2.service
+
+cat <<EOF >> ~/.bash_profile
+export CONSUL_HTTP_ADDR=http://$(ifconfig eth1 | grep 'inet ' | awk '{ print $2 }'):8500
+export CONSUL_HTTP_SSL=false
+EOF

@@ -167,3 +167,6 @@ for service in etcd patroni
 do
     systemctl enable $service && systemctl start $service
 done
+
+# etcdctl member list
+# etcdctl ls --recursive --sort -p /db
