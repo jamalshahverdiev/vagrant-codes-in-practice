@@ -155,3 +155,15 @@ EOF
 #vault operator unseal
 #### Enter VAULT_TOKEN=ROOTTOKEN and activate approle
 # curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST --data '{"type": "approle"}' http://VAULT_IP:8200/v1/sys/auth/approle
+
+### Get new app token:
+# ./get_client_token.sh ROOT_TOKEN appsecretspolicy appsecrets
+
+### Write some datas:
+# vault write secret/appsecrets @secrets.json
+
+### Read written datas:
+# vault read --format=json secret/appsecrets
+
+## Check values with new token (newRoletone=./get_client_token.sh script output)
+# curl -s -X GET -H "X-Vault-Token: 1e83609c-9595-7b9e-946d-b34ff3e4d248" http://VAULT_IP:8200/v1/secret/appsecrets | jq
