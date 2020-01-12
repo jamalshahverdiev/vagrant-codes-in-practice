@@ -134,7 +134,7 @@ RestartSec=42s
 WantedBy=multi-user.target
 EOF
 
-for service in consul vault dnsmasq
+for service in consul vault dnsmasq nginx php72-php-fpm.service
 do
     systemctl enable $service && systemctl restart $service
 done
@@ -165,5 +165,5 @@ EOF
 ### Read written datas:
 # vault read --format=json secret/appsecrets
 
-## Check values with new token (newRoletone=./get_client_token.sh script output)
-# curl -s -X GET -H "X-Vault-Token: 1e83609c-9595-7b9e-946d-b34ff3e4d248" http://VAULT_IP:8200/v1/secret/appsecrets | jq
+## Check values with new token (newRoleToken=./get_client_token.sh script output)
+# curl -s -X GET -H "X-Vault-Token: newRoleToken" http://VAULT_IP:8200/v1/secret/appsecrets | jq
