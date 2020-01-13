@@ -1,1 +1,2 @@
-This Vagrantfile install and configure Jenkins server with GitLab. 
+This Vagrantfile install and configure all servers. 
+
