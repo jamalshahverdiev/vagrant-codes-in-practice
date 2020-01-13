@@ -41,7 +41,7 @@ $ etcdctl get /db/postgres/members/pg3
 ```
 
 ##### To test everything go to the HAProxy page and look at the master node (http://10.1.42.233:7000/):
-![Result](images/haimage.PNG) 
+![Result](images/topologyPG.PNG) 
 
 ##### To to write some data over HaProxy with 5000 port remotely with PgSQL client. Then shutdown master node and look at the HAproxy page and find Master node. Then over Haproxy try read written data from master PostgresSQL.
 
