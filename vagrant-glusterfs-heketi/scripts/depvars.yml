@@ -1,0 +1,15 @@
+---
+sshportPoint: 11510
+subnet: 192.168.10.
+heketiBPort: 42 
+heketiMPort: 41
+certpass: 
+domainname: 
+dbUser: 
+dbPass: 
+dbName: 
+sipUserPass: 
+sipDomain: 
+gitDomain:
+gitUser: 
+gitPass: 

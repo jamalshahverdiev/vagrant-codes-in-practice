@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+vars = YAML.load_file('scripts/depvars.yml')
+
+Vagrant.configure("2") do |heketi|
+  heketi.vm.box = "centos/7"
+  heketi.vbguest.auto_update = false
+  heketi.vm.define "heketi" do |heketi|
+    heketi.vm.network :private_network, ip: "#{vars['subnet']}#{vars['heketiMPort']}" 
+    heketi.vm.hostname = "heketi"
+    heketi.ssh.forward_agent = true
+    heketi.vm.network :forwarded_port, guest: 22, host: "14#{vars['heketiMPort']}", id: "ssh"
+    heketi.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--name", "heketi", "--memory", "1024", "--cpus", "1"]
+    end
+    heketi.vm.provision "shell", path: "scripts/cos7GLscript.sh"
+  end
+
+  heketi.vm.define "heketibackup" do |heketibackup|
+    heketibackup.vm.network :private_network, ip: "#{vars['subnet']}#{vars['heketiBPort']}"
+    heketibackup.vm.hostname = "heketibackup"
+    heketibackup.ssh.forward_agent = true
+    heketibackup.vm.network :forwarded_port, guest: 22, host: "14#{vars['heketiBPort']}", id: "ssh"
+    heketibackup.vm.provider :virtualbox do |v1|
+      v1.customize ["modifyvm", :id, "--name", "heketibackup", "--memory", "1024", "--cpus", "1"]
+    end
+    heketibackup.vm.provision "shell", path: "scripts/cos7GLscript.sh"
+    heketibackup.vm.provision "shell", path: "scripts/cos7heketi.sh", args: "#{vars['subnet']}#{vars['heketiBPort']} heketi"
+  end
+
+  (1..3).each do |i|
+     heketi.vm.define "prodgluster0#{i}" do |prodgluster|
+       prodgluster.vm.box = "centos/7"
+       prodgluster.vm.network :private_network, ip: vars['subnet'] + "2#{i}"
+       prodgluster.vm.hostname = "prodgluster0#{i}"
+       prodgluster.ssh.forward_agent = true
+       prodgluster.vm.network :forwarded_port, guest: 22, host: vars['sshportPoint'] + 2 + i, id: "ssh"
+       prodgluster.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--name", "prodgluster0#{i}", "--memory", "1024", "--cpus", "1"]
+       end
+       prodgluster.vm.provision "shell", path: "scripts/cos7GLscript.sh"
+       prodgluster.vm.provision "shell", path: "scripts/cos7glusterfs.sh"
+     end
+  end
+end

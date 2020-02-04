@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: heketi-secret
+  namespace: default
+type: "kubernetes.io/glusterfs"
+data:
+  # echo -n "PASSWORD" | base64
+  key: dHR5dWdoanNkYzh5aXUzdTk4aQo=
+root@loadbalancer:~#
+root@loadbalancer:~#
+root@loadbalancer:~#
+root@loadbalancer:~# cat pa
+cat: pa: No such file or directory
+root@loadbalancer:~# cat gluster-storage-class.yaml
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: gluster-heketi
+provisioner: kubernetes.io/glusterfs
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+parameters:
+  resturl: "http://192.168.10.41:8080"
+  restuser: "admin"
+  secretName: "heketi-secret"
+  secretNamespace: "default"
+  volumetype: "replicate:2"
+  volumenameprefix: "k8s-prod"
+  clusterid: "5a8ba24e30cdd80a25d605420af3e232"
+
