@@ -81,3 +81,12 @@ cat <<EOF >> ~/.bash_profile
 export CONSUL_HTTP_ADDR=http://$(ifconfig eth1 | grep 'inet ' | awk '{ print $2 }'):8500
 export CONSUL_HTTP_SSL=false
 EOF
+
+
+# consul info 
+# consul members
+# consul operator raft list-peers
+# consul monitor  -log-level=debug
+# consul validate /etc/consul/config/server.json
+# consul debug
+# curl 'http://localhost:8500/v1/health/service/counting?passing'
