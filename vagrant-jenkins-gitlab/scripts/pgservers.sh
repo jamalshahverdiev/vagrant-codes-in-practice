@@ -170,3 +170,4 @@ done
 
 # etcdctl member list
 # etcdctl ls --recursive --sort -p /db
+# ETCDCTL_API=2 etcdctl rm /db --recursive
