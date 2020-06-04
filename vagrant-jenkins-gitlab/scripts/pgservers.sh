@@ -3,7 +3,7 @@
 patroniVersion='1.6.0-1'
 
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-yum install -y postgresql11 postgresql11-server
+yum install -y postgresql11 postgresql11-server postgresql11-contrib
 curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | grep browser_download_url | grep linux-amd64 | cut -d '"' -f 4 | wget -qi -
 tar zxf etcd-*.tar.gz && cp etcd-*linux-amd64/etcd* /usr/local/bin/
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
