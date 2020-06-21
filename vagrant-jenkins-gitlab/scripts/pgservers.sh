@@ -3,7 +3,7 @@
 patroniVersion='1.6.5-1'
 
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-yum install -y postgresql11 postgresql11-server postgresql11-contrib
+yum install -y postgresql12 postgresql12-server postgresql12-contrib
 curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | grep browser_download_url | grep linux-amd64 | cut -d '"' -f 4 | wget -qi -
 tar zxf etcd-*.tar.gz && cp etcd-*linux-amd64/etcd* /usr/local/bin/
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -43,8 +43,9 @@ bootstrap:
                 bgwriter_delay: 20ms
                 effective_io_concurrency: 2
                 wal_level: logical
+                wal_buffers: 16MB
                 checkpoint_timeout: 15min
-                max_wal_size: 50GB
+                max_wal_size: 4GB
                 min_wal_size: 1GB
                 checkpoint_completion_target: 0.8
                 archive_mode: on
@@ -58,11 +59,30 @@ bootstrap:
                 hot_standby_feedback: on
                 random_page_cost: 1.2
                 effective_cache_size: 2GB
-                default_statistics_target: 1000
+                default_statistics_target: 100
+                log_checkpoints: 'on'
+                log_connections: 'on'
+                log_disconnections: 'on'
+                log_duration: 'on'
+                log_filename: postgresql-%a.log
+                log_line_prefix: '%m - %l - %p - %h - %u@%d - %x'
+                log_lock_waits: 'on'
+                log_min_duration_statement: 30s
+                log_min_error_statement: NOTICE
+                log_min_messages: WARNING
+                log_rotation_age: '1440'
+                log_timezone: Asia/Baku
+                log_truncate_on_rotation: on
                 logging_collector: on
                 log_directory: "/var/log/postgresql"
-                log_filename: "postgresql-11-main.log"
                 max_locks_per_transaction: 256
+                max_worker_processes: 8
+                max_parallel_workers_per_gather: 4
+                max_parallel_maintenance_workers: 4
+                max_parallel_workers: 8
+                log_min_duration_statement: 5000
+                session_preload_libraries: auto_explain
+                shared_preload_libraries: pg_stat_statements
 
     initdb:
     - encoding: UTF8
