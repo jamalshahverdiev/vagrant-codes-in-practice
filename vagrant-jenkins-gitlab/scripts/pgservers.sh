@@ -116,6 +116,10 @@ After=syslog.target network.target
 Environment="PATRONI_LOGLEVEL=DEBUG"
 User=postgres
 Group=postgres
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitAS=infinity
+LimitFSIZE=infinity
 PIDFile=/var/run/patroni/patroni.pid
 PermissionsStartOnly=true
 ExecStartPre=-/bin/mkdir -p /var/run/patroni /var/log/patroni
@@ -144,6 +148,7 @@ Type=notify
 User=postgres
 ExecStart=/usr/local/bin/etcd \
   --name $2 \
+  --enable-v2=true \
   --data-dir=/db/etcd \
   --initial-advertise-peer-urls http://$1:2380 \
   --listen-peer-urls http://$1:2380 \
