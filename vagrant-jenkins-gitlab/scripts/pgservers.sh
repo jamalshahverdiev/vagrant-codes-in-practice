@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-patroniVersion='1.6.0-1'
+patroniVersion='1.6.5-1'
 
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 yum install -y postgresql11 postgresql11-server postgresql11-contrib
