@@ -105,7 +105,7 @@ bootstrap:
 postgresql:
     listen: $1:5432
     connect_address: $1:5432
-    bin_dir: /usr/pgsql-11/bin
+    bin_dir: /usr/pgsql-12/bin
     data_dir: /data/patroni
     pgpass: /tmp/pgpass
     authentication:
