@@ -6,7 +6,14 @@ yum install -y postgresql11.x86_64
 
 cat <<EOF > /etc/haproxy/haproxy.cfg
 global
-    maxconn 100
+    log 127.0.0.1:514 local0
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+    stats timeout 30s
+    daemon
+    nbproc 3
+    cpu-map auto:1-4 0-3
+    maxconn 100000
 
 defaults
     log global
@@ -22,11 +29,23 @@ listen stats
     bind *:7000
     stats enable
     stats uri /
+    stats auth admin:admin
+    stats refresh 10s
+    stats show-legends
 
 listen postgres
-    bind *:5000
+    bind *:5432
     option httpchk
     http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+    server pg1_5432 10.1.42.141:5432 maxconn 100 check port 8008
+    server pg2_5432 10.1.42.142:5432 maxconn 100 check port 8008
+    server pg3_5432 10.1.42.143:5432 maxconn 100 check port 8008
+
+listen postgres
+    bind *:5433
+    option httpchk
+    http-check expect status 503
     default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
     server pg1_5432 10.1.42.141:5432 maxconn 100 check port 8008
     server pg2_5432 10.1.42.142:5432 maxconn 100 check port 8008
