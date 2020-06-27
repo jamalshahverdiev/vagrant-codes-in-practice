@@ -3,7 +3,7 @@
 patroniVersion='1.6.5-1'
 
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-yum install -y postgresql12 postgresql12-server postgresql12-contrib hypopg_12.x86_64 pg_qualstats12
+yum install -y postgresql12 postgresql12-server postgresql12-contrib hypopg_12.x86_64 pg_qualstats12 pgfincore12.x86_64
 curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | grep browser_download_url | grep linux-amd64 | cut -d '"' -f 4 | wget -qi -
 tar zxf etcd-*.tar.gz && cp etcd-*linux-amd64/etcd* /usr/local/bin/
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
