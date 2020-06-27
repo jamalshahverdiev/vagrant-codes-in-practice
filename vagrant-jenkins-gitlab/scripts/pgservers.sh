@@ -3,12 +3,13 @@
 patroniVersion='1.6.5-1'
 
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-yum install -y postgresql12 postgresql12-server postgresql12-contrib
+yum install -y postgresql12 postgresql12-server postgresql12-contrib hypopg_12.x86_64 pg_qualstats12
 curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | grep browser_download_url | grep linux-amd64 | cut -d '"' -f 4 | wget -qi -
 tar zxf etcd-*.tar.gz && cp etcd-*linux-amd64/etcd* /usr/local/bin/
 yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 wget https://github.com/cybertec-postgresql/patroni-packaging/releases/download/$patroniVersion/patroni-$patroniVersion.rhel7.x86_64.rpm && yum install -y patroni-$patroniVersion.rhel7.x86_64.rpm
 
+## CREATE EXTENSION hypopg WITH SCHEMA myextensions;
 mkdir -p /db/etcd /data/pg_archived /var/log/postgresql /etc/patroni /data/patroni
 
 cat <<EOF > /etc/patroni/patroni.yml
@@ -32,7 +33,7 @@ bootstrap:
         postgresql:
             use_pg_rewind: true
             parameters:
-                max_connections: 500
+                max_connections: 40
                 shared_buffers: 1GB
                 huge_pages: off
                 temp_buffers: 128MB
@@ -82,7 +83,7 @@ bootstrap:
                 max_parallel_workers: 8
                 log_min_duration_statement: 5000
                 session_preload_libraries: auto_explain
-                shared_preload_libraries: pg_stat_statements
+                shared_preload_libraries: pg_stat_statements, pg_qualstats
 
     initdb:
     - encoding: UTF8
