@@ -33,7 +33,7 @@ listen stats
     stats refresh 10s
     stats show-legends
 
-listen postgres
+listen master_postgres
     bind *:5432
     option httpchk
     http-check expect status 200
@@ -42,7 +42,7 @@ listen postgres
     server pg2_5432 10.1.42.142:5432 maxconn 100 check port 8008
     server pg3_5432 10.1.42.143:5432 maxconn 100 check port 8008
 
-listen postgres
+listen slaves_postgres
     bind *:5433
     option httpchk
     http-check expect status 503
