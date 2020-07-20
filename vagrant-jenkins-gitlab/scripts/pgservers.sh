@@ -134,9 +134,7 @@ initial-advertise-peer-urls: http://$1:2380
 listen-peer-urls: http://$1:2380
 listen-client-urls: http://$1:2379,http://127.0.0.1:2379
 advertise-client-urls: http://$1:2379
-initial-cluster-token: etcd-cluster-0
 initial-cluster: "pg1=http://pg1:2380,pg2=http://pg2:2380,pg3=http://pg3:2380"
-initial-cluster-state: new
 EOF
 
 
