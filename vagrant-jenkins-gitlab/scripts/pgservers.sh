@@ -201,7 +201,7 @@ RestartSec=30s
 WantedBy=multi-user.target
 EOF
 
-chmod -R 700 /data/patroni
+chmod -R 700 /data/patroni /db/etcd
 
 systemctl daemon-reload
 
