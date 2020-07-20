@@ -149,8 +149,8 @@ ExecStart=/bin/bash -c "/usr/bin/patroni /etc/patroni/patroni.yml >> /var/log/pa
 ExecReload=/bin/kill -HUP \$MAINPID
 KillMode=process
 KillSignal=SIGTERM
-Restart=on-failure
-RestartSec=42s
+Restart=always
+RestartSec=10s
 
 [Install]
 WantedBy=multi-user.target
