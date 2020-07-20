@@ -10,7 +10,7 @@ yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarc
 wget https://github.com/cybertec-postgresql/patroni-packaging/releases/download/$patroniVersion/patroni-$patroniVersion.rhel7.x86_64.rpm && yum install -y patroni-$patroniVersion.rhel7.x86_64.rpm
 
 ## CREATE EXTENSION hypopg WITH SCHEMA myextensions;
-mkdir -p /db/etcd /data/pg_archived /var/log/postgresql /etc/patroni /data/patroni
+mkdir -p  /db/etcd /data/{patroni,pg_archived} /var/log/postgresql /etc/{etcd,patroni}
 
 cat <<EOF > /etc/patroni/patroni.yml
 scope: postgres
@@ -126,7 +126,21 @@ tags:
     nosync: false
 EOF
 
-chown -R postgres:postgres /db/etcd /etc/patroni /data/pg_archived /var/log/postgresql /data/patroni
+cat <<EOF > /etc/etcd/etcd.conf
+name: $2
+enable-v2: true
+data-dir: /db/etcd
+initial-advertise-peer-urls: http://$1:2380
+listen-peer-urls: http://$1:2380
+listen-client-urls: http://$1:2379,http://127.0.0.1:2379
+advertise-client-urls: http://$1:2379
+initial-cluster-token: etcd-cluster-0
+initial-cluster: "pg1=http://pg1:2380,pg2=http://pg2:2380,pg3=http://pg3:2380"
+initial-cluster-state: new
+EOF
+
+
+chown -R postgres:postgres /db/etcd /data/{patroni,pg_archived} /var/log/postgresql /etc/{etcd,patroni}
 
 cat <<EOF > /etc/systemd/system/patroni.service
 [Unit]
@@ -167,17 +181,19 @@ Wants=network-online.target
 [Service]
 Type=notify
 User=postgres
-ExecStart=/usr/local/bin/etcd \
-  --name $2 \
-  --enable-v2=true \
-  --data-dir=/db/etcd \
-  --initial-advertise-peer-urls http://$1:2380 \
-  --listen-peer-urls http://$1:2380 \
-  --listen-client-urls http://$1:2379,http://127.0.0.1:2379 \
-  --advertise-client-urls http://$1:2379 \
-  --initial-cluster-token etcd-cluster-0 \
-  --initial-cluster pg1=http://pg1:2380,pg2=http://pg2:2380,pg3=http://pg3:2380 \
-  --initial-cluster-state new
+Group=postgres
+ExecStartPre=-/bin/mkdir -p /var/run/etcd
+ExecStartPre=/bin/chown -R postgres:postgres /var/run/etcd
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitAS=infinity
+LimitFSIZE=infinity
+PIDFile=/var/run/etcd/etcd.pid
+PermissionsStartOnly=true
+ExecStart=/bin/bash -c "/usr/local/bin/etcd --config-file /etc/etcd/etcd.conf >> /var/log/postgresql/etcd.log 2>&1 & echo $! > /var/run/etcd/etcd.pid"
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+KillSignal=SIGTERM
 Restart=on-failure
 RestartSec=30s
 
