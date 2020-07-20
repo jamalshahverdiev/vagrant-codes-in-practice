@@ -170,7 +170,7 @@ RestartSec=10s
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF > /etc/systemd/system/etcd.service
+cat <<'EOF' > /etc/systemd/system/etcd.service
 [Unit]
 Description=etcd service
 Documentation=https://github.com/etcd-io/etcd
