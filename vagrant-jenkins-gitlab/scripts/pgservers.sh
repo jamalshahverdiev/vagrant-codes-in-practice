@@ -117,7 +117,7 @@ postgresql:
             username: postgres
             password: $3
     parameters:
-        unix_socket_directories: '.'
+        unix_socket_directories: '/var/run/postgresql'
 
 tags:
     nofailover: false
