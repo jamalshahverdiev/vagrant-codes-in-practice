@@ -2,7 +2,7 @@
 
 yum install -y haproxy nano jq
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-yum install -y postgresql11.x86_64
+yum install -y postgresql12.x86_64
 
 cat <<EOF > /etc/haproxy/haproxy.cfg
 global
