@@ -48,7 +48,7 @@ EOF
 
 systemctl enable minio --now
 export MINIO_ACCESS_KEY=$adminUser
-export MINIO_SECRET_KEY=
+export MINIO_SECRET_KEY=$adminPass
 
 if [[ $(hostname) = minio4 ]]
 then
