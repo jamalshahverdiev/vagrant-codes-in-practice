@@ -1,0 +1,12 @@
+---
+sshportPoint: '200'
+consulIPPort: '10'
+pgIPPort: '14'
+gitlabPort: '212'
+halbPort: '11'
+backendIPPort: '15'
+minioIPPort: '17'
+jenkinsPort: '120'
+subnet: '10.1.42.'
+pgPass: 'P2stgre1sSuperUserp144w0rd'
+...

@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"C:/Users/Administrator/vagrantfiles/zibil/vagrant-codes-in-practice/patronipg-walg-halb","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

@@ -1,0 +1,56 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+vars = YAML.load_file('scripts/depvars.yml')
+
+Vagrant.configure("2") do |vmconf|
+  vmconf.vm.box = "centos/7"
+  (1..4).each do |i|
+     vmconf.vm.define "minio#{i}" do |minio|
+       minio.vm.network :private_network, ip: "#{vars['subnet']}#{vars['minioIPPort']}#{i}"
+       minio.vm.hostname = "minio#{i}"
+       minio.ssh.forward_agent = true
+       minio.vm.network :forwarded_port, guest: 22, host: "#{vars['minioIPPort']}9#{i}", id: "ssh"
+       minio.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "minio#{i}"]
+       end
+       minio.vm.provision "shell", path: "scripts/install.sh"
+       minio.vm.provision :reload
+       minio.vm.provision "shell", path: "scripts/minio.sh", args: "#{vars['subnet']}#{vars['minioIPPort']}#{i}"
+     end
+  end
+  (1..2).each do |i|
+     vmconf.vm.define "halb#{i}" do |halb|
+       halb.vm.network :private_network, ip: "#{vars['subnet']}#{vars['halbPort']}#{i}"
+       halb.vm.hostname = "halb#{i}"
+       halb.ssh.forward_agent = true
+       halb.vm.network :forwarded_port, guest: 22, host: "#{vars['halbPort']}#{i}", id: "ssh"
+       halb.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "halb#{i}"]
+       end
+       halb.vm.provision "shell", path: "scripts/install.sh"
+       halb.vm.provision :reload
+       halb.vm.provision "shell", path: "scripts/halbinstall.sh", args: "#{vars['subnet']}#{vars['halbPort']}#{i} #{vars['pgPass']}"
+       halb.vm.provision "shell", path: "scripts/halbkeepalived.sh"
+     end
+  end
+  (1..3).each do |i|
+     vmconf.vm.define "patpg#{i}" do |patpg|
+       patpg.vm.network :private_network, ip: "#{vars['subnet']}#{vars['pgIPPort']}#{i}"
+       patpg.vm.hostname = "patpg#{i}"
+       patpg.ssh.forward_agent = true
+       patpg.vm.network :forwarded_port, guest: 22, host: "#{vars['pgIPPort']}11#{i}", id: "ssh"
+       patpg.vm.provider :virtualbox do |v1|
+         v1.customize ["modifyvm", :id, "--memory", 1024]
+         v1.customize ["modifyvm", :id, "--name", "patpg#{i}"]
+       end
+       patpg.vm.provision "shell", path: "scripts/install.sh"
+       patpg.vm.provision :reload
+       patpg.vm.provision "shell", path: "scripts/pgservers-minio.sh"
+       patpg.vm.provision "shell", path: "scripts/pgservers.sh", args: "#{vars['subnet']}#{vars['pgIPPort']}#{i} patpg#{i} #{vars['pgPass']}"
+     end
+  end
+end
