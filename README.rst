@@ -16,3 +16,4 @@ In this repository I will store all type of Vagrant deployments
 * `Install/Configure Minikube to the Ubuntu server <https://github.com/jamalshahverdiev/vagrant-codes-in-practice/tree/master/vagrant-ubuntu-minikube>`_
 * `Configure Jenkins with GitLab and GoGS integration <https://github.com/jamalshahverdiev/vagrant-codes-in-practice/tree/master/jenkins-gitlab-gogs-webdeploy>`_
 * `Configure Ansible server with 2 CentOS7 and Ubuntu18 nodes <https://github.com/jamalshahverdiev/vagrant-codes-in-practice/tree/master/vagrant-ansible-ubuntu-centos>`_
+* `Minio and WAL-G to get Full and incremental backups from PostgreSQL <https://github.com/jamalshahverdiev/vagrant-codes-in-practice/tree/master/patronipg-walg-halb>`_
